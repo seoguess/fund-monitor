@@ -58,8 +58,8 @@ for i in fund_dict.keys():
     #将字符型的日期转化成datetime, 然后进行计算，最后利用datetime.timedelta进行格式化（.days），输出间隔天数，这边返回的天数为整型
     _split = (datetime.strptime(fund_date, '%Y-%m-%d') - datetime.strptime(fund_dict[i][0], '%Y-%m-%d')).days
     content = "%s: 当前价格为 %s，上一次买入价格为 %s，累计跌幅达到 %.2f%%，时间间隔天数为 %s。" % (fund_name, fund_price, _price2, _down, _split)
+    # 将content内容encode成UTF-8格式
     content = content.encode('UTF-8')
-    # content = "something"
     #开始进行逻辑判断，主要是3个条件：
     if _down > 2.5:
         title = "%s 跌幅达到 %.2f%%" % (fund_name, _down)
