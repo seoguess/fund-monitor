@@ -72,14 +72,14 @@ def fund_info(num):
 
 #设置邮件提醒的内容
 def email_remind(title,content):
-    fromaddr = 'seoguess@163.com'
-    toaddrs  = '61705345@qq.com'
+    fromaddr = 'sendmail'
+    toaddrs  = 'getmail'
     msg = MIMEText(content)
     msg['Subject'] = title
-    msg['From'] = 'seoguess@163.com'
-    msg['To'] = '61705345@qq.com'
-    username = 'seoguess@163.com'
-    password = 'huangdonghui'
+    msg['From'] = 'sendmail'
+    msg['To'] = 'getmail'
+    username = 'sendmail'
+    password = 'password'
 
     server = smtplib.SMTP('smtp.163.com')
     server.starttls()
