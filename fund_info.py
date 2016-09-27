@@ -14,6 +14,10 @@ import time
 import smtplib
 from email.mime.text import MIMEText
 
+#导入BeautifulSoup模块
+from bs4 import BeautifulSoup
+import re
+
 #设置基金标的与上一次买入日期与单价
 fund_dict = {160119:["2016-09-12", 1.5359], 320011: ["2016-09-12", 2.46] , 460005: ["2016-09-12", 2.5559], 470009: ["2016-09-12", 2.787]}
 
@@ -54,7 +58,7 @@ for i in fund_dict.keys():
     _price1 = float(fund_price)
     _price2 = fund_dict[i][1]
     #换算成百分比 * 100
-    _down = ((_price1-_price2)/_price1) * 100
+    _down = ((_price2-_price1)/_price1) * 100
     #将字符型的日期转化成datetime, 然后进行计算，最后利用datetime.timedelta进行格式化（.days），输出间隔天数，这边返回的天数为整型
     _split = (datetime.strptime(fund_date, '%Y-%m-%d') - datetime.strptime(fund_dict[i][0], '%Y-%m-%d')).days
     content = "%s: 当前价格为 %s，上一次买入价格为 %s，累计跌幅达到 %.2f%%，时间间隔天数为 %s。" % (fund_name, fund_price, _price2, _down, _split)
@@ -74,16 +78,45 @@ for i in fund_dict.keys():
         email_remind(title,content)
 
     # 格式化字符输出小数点位后面两个字符，重复两个%用于输出一个%
-    print content
+    # print content
+
+# 可选 - 输出最近500天的净值波动情况表
+num1 = 160119
+
+#数据获取函数
+def fund_info2(num):
+    url = "http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz&code=%s&page=1&per=500" % str(num)
+    try:
+        r = requests.get(url)
+        return r.text
+    except:
+        return None
+    finally:
+        r.close()
+
+html = fund_info2(num1)
+soup = BeautifulSoup(html,'html.parser',from_encoding='utf-8')
+result = soup.find_all("tr")[1:]
+# print result
+
+# 新建两个list用来放置时间与价格字段，传递到echarts中
+date_list = []
+price_list = []
+for x in result:
+    _date = (x.find_all("td")[0].string).encode('UTF-8')
+    _price = (x.find_all("td")[1].string).encode('UTF-8')
+    date_list.append(_date)
+    price_list.append(_price)
+
+# 将demo1.html作为模板，然后进行字符串格式化输出
+with open("demo1.html", "r") as f1:
+    _cnt = f1.read()
+    cnt = _cnt % (fund_info(num1)[0] ,sorted(date_list), price_list)
+
+with open("demo.html", "w") as f2:
+    f2.write(cnt)
 
 
 
 
-
-
-
-
-
-
-
-# 占位。
+#
