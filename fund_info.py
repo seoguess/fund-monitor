@@ -61,7 +61,7 @@ for i in fund_dict.keys():
     _down = ((_price2-_price1)/_price1) * 100
     #将字符型的日期转化成datetime, 然后进行计算，最后利用datetime.timedelta进行格式化（.days），输出间隔天数，这边返回的天数为整型
     _split = (datetime.strptime(fund_date, '%Y-%m-%d') - datetime.strptime(fund_dict[i][0], '%Y-%m-%d')).days
-    content = "%s: 当前价格为 %s，上一次买入价格为 %s，累计跌幅达到 %.2f%%，时间间隔天数为 %s。" % (fund_name, fund_price, _price2, _down, _split)
+    content = "%s: 当前价格为 %s (%s)，上一次买入价格为 %s，累计跌幅达到 %.2f%%，时间间隔天数为 %s。" % (fund_name, fund_price, fund_date, _price2, _down, _split)
     # 将content内容encode成UTF-8格式
     content = content.encode('UTF-8')
     #开始进行逻辑判断，主要是3个条件：
@@ -78,10 +78,10 @@ for i in fund_dict.keys():
         email_remind(title,content)
 
     # 格式化字符输出小数点位后面两个字符，重复两个%用于输出一个%
-    # print content
+    print content
 
 # 可选 - 输出最近500天的净值波动情况表
-num1 = 160119
+num1 = 320011
 
 #数据获取函数
 def fund_info2(num):
