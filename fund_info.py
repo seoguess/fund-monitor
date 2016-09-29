@@ -81,7 +81,7 @@ for i in fund_dict.keys():
     print content
 
 # 可选 - 输出最近500天的净值波动情况表
-num1 = 320011
+num1 = 460005
 
 #数据获取函数
 def fund_info2(num):
@@ -95,7 +95,7 @@ def fund_info2(num):
         r.close()
 
 html = fund_info2(num1)
-soup = BeautifulSoup(html,'html.parser',from_encoding='utf-8')
+soup = BeautifulSoup(html,'html.parser')
 result = soup.find_all("tr")[1:]
 # print result
 
