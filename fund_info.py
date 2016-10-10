@@ -8,7 +8,6 @@ sys.setdefaultencoding("utf-8")
 
 #导入时间模块
 from datetime import datetime
-import time
 
 #导入邮箱模块
 import smtplib
@@ -20,6 +19,9 @@ import re
 
 #设置基金标的与上一次买入日期与单价
 fund_dict = {160119:["2016-09-12", 1.5359], 320011: ["2016-09-12", 2.46] , 460005: ["2016-09-12", 2.5559], 470009: ["2016-09-12", 2.787]}
+
+#设置当前日期
+now = datetime.today()
 
 #数据获取函数
 def fund_info(num):
@@ -60,8 +62,8 @@ for i in fund_dict.keys():
     #换算成百分比 * 100
     _down = ((_price2-_price1)/_price1) * 100
     #将字符型的日期转化成datetime, 然后进行计算，最后利用datetime.timedelta进行格式化（.days），输出间隔天数，这边返回的天数为整型
-    _split = (datetime.strptime(fund_date, '%Y-%m-%d') - datetime.strptime(fund_dict[i][0], '%Y-%m-%d')).days
-    content = "%s: 当前价格为 %s (%s)，上一次买入价格为 %s，累计跌幅达到 %.2f%%，时间间隔天数为 %s。" % (fund_name, fund_price, fund_date, _price2, _down, _split)
+    _split = ( now - datetime.strptime(fund_dict[i][0], '%Y-%m-%d')).days
+    content = "%s: 当前价格为 %s (%s)，上一次买入价格为 %s (%s)，累计跌幅达到 %.2f%%，时间间隔天数为 %s。" % (fund_name, fund_price, fund_date, _price2, fund_dict[i][0],  _down, _split)
     # 将content内容encode成UTF-8格式
     content = content.encode('UTF-8')
     #开始进行逻辑判断，主要是3个条件：
